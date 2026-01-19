@@ -1,0 +1,210 @@
+🏦 API Banco Digital – Teste Técnico Renner
+
+Este projeto consiste em uma API REST simplificada de um banco digital, desenvolvida em Java com Spring Boot, que permite:
+
+Cadastro e consulta de contas
+
+Transferência de valores entre contas
+
+Envio de notificação por e-mail após transferências
+
+Garantia de consistência em cenários concorrentes
+
+🚀 Tecnologias Utilizadas
+
+Java 17+
+
+Spring Boot
+
+Spring Web
+
+Spring Data JPA
+
+Spring Validation
+
+Spring Mail
+
+Hibernate
+
+Banco de dados H2 (em memória)
+
+Maven
+
+Swagger / OpenAPI (springdoc)
+
+Lombok
+
+📐 Arquitetura do Projeto
+
+O projeto segue uma arquitetura em camadas, separando responsabilidades:
+
+Controller → Service → Repository → Entity
+
+
+Controller: camada HTTP (request/response)
+
+Service: regras de negócio
+
+Repository: acesso a dados
+
+Entity: modelo de domínio
+
+DTOs: objetos de entrada/saída da API
+
+Notification: envio de e-mail desacoplado da regra de negócio
+
+Essa separação melhora:
+
+Manutenibilidade
+
+Testabilidade
+
+Clareza de responsabilidades
+
+📂 Estrutura de Pastas (resumida)
+feature
+ ├── Account
+ │   ├── controller
+ │   ├── service
+ │   ├── repository
+ │   ├── entity
+ │   └── dto
+ ├── Transfer
+ └── notification
+
+▶️ Como Rodar o Projeto
+Pré-requisitos
+
+Java 17 ou superior
+
+Maven
+
+Passos
+mvn clean install
+mvn spring-boot:run
+
+
+A aplicação sobe em:
+
+http://localhost:8080
+
+📘 Swagger (Documentação da API)
+
+Após subir o projeto, acesse:
+
+http://localhost:8080/swagger-ui.html
+
+
+Lá você pode:
+
+Visualizar todos os endpoints
+
+Testar transferências
+
+Criar contas
+
+Ver validações de entrada
+
+🗄️ Banco de Dados e Massa Inicial
+
+Banco: H2 em memória
+
+As tabelas são criadas automaticamente pelo Hibernate
+
+O arquivo data.sql contém 50 contas pré-carregadas, atendendo ao requisito do teste
+
+Configuração importante (application.properties):
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.defer-datasource-initialization=true
+spring.sql.init.mode=always
+
+
+Isso garante que:
+
+O schema seja criado antes
+
+O data.sql seja executado corretamente
+
+🔐 Concorrência e Consistência
+
+Operações de transferência são executadas dentro de transação
+
+A entidade Account utiliza @Version (lock otimista)
+
+A ordem de carregamento das contas evita deadlocks
+
+Regras de débito/crédito ficam encapsuladas na entidade
+
+✉️ Configuração de Envio de E-mail
+
+O envio de e-mail é feito após transferências bem-sucedidas, por meio de um serviço desacoplado (EmailNotificationService).
+
+Dependência utilizada
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-mail</artifactId>
+</dependency>
+
+Configuração SMTP (exemplo com Gmail)
+
+No application.properties:
+
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=SEU_EMAIL@gmail.com
+spring.mail.password=SUA_SENHA_DE_APP
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+
+⚠️ Importante:
+
+Para Gmail, utilize uma Senha de App
+
+Não use sua senha pessoal
+
+Em ambiente de teste técnico, é aceitável usar e-mails fictícios
+
+Observação Importante (Teste Técnico)
+
+O envio de e-mail foi abstraído em um serviço, permitindo:
+
+Uso de SMTP real
+
+Substituição por mock/log em testes unitários
+
+Facilidade de manutenção futura
+
+Essa abordagem segue boas práticas de desacoplamento.
+
+🧪 Testabilidade
+
+Services podem ser testados isoladamente
+
+O serviço de e-mail pode ser facilmente mockado
+
+Controllers não contêm lógica de negócio
+
+📌 Decisões Técnicas Relevantes
+
+Uso de BigDecimal para valores monetários
+
+Separação clara entre Controller e Service
+
+Notificação por e-mail desacoplada
+
+Base de dados em memória para facilitar execução
+
+Swagger para documentação automática
+
+✅ Conclusão
+
+O projeto atende integralmente aos requisitos propostos, simulando um cenário real de transferências bancárias, com foco em:
+
+Consistência
+
+Clareza de código
+
+Boas práticas de arquitetura
+
+Facilidade de execução e avaliação
